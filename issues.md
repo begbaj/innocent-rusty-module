@@ -118,3 +118,20 @@ insert rule ip6 libvirt_network guest_output iif virbr3 counter reject
 feeling dumb: rebooting solved the issue.
 REMINDER: if restarting with systemctl seems to have no effect, just reboot.
 
+# DOS/Windows line ending
+## Error:
+
+```
+-bash: /home/vagrant/.bashrc: line 6: syntax error near unexpected token `$'in\r'' '
+bash: /home/vagrant/.bashrc: line 6: `case $- in
+```
+
+for some reason, .bashrc was saved with Windows enconding instead of UNIX.
+
+## fixing
+with vim, open the file and then:
+```
+:set ff=unix
+:wq!
+```
+

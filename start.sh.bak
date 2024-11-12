@@ -1,14 +1,7 @@
-# New start script using docker image of vagrant to 
-# avoid dealing with ruby dependencies
-#
-# Author: Began Bajrami
-
+# Check if the file exists
 VFILE=Vagrantfile
-VAGRANT_PLUGINS=("")
+VAGRANT_PLUGINS=("vagrant-libvirt")
 
-source .irmrc
-
-# Check if a Vagrantfile already exists
 if [ -e "$VFILE" ]; then
 	echo "Vagrantfile already exists"
 else
@@ -45,16 +38,7 @@ for PLUGIN in "${VAGRANT_PLUGINS[@]}"; do
         esac
     fi
 done
-
 vagrant up
-read -p "do you want to upload files to the vm?(y/n)" choice
-case "$choice" in 
-  y|Y ) 
-	sh upload.sh
-	;;
-  * ) 
-	  echo "to upload files, run upload.sh"
-	;;
-esac
+sh upload.sh
 echo "Target os is up and running"
 

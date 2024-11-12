@@ -135,3 +135,10 @@ with vim, open the file and then:
 :wq!
 ```
 
+# libvirt incompatibility on archlinux with vagrant
+## Description
+Note: The libvirt plugin is not compatible with the ruby gems as currently shipped with the vagrant package in the Arch repos (which are up-to-date). This might cause an error such as Vagrant failed to properly resolve required dependencies.
+
+An alternative in order to use this plugin without such issues, is to use the container image via either Podman or Docker, as shown in the official documentation [1].
+\[ from official archlinux documentation \]
+https://vagrant-libvirt.github.io/vagrant-libvirt/installation.html#docker--podman

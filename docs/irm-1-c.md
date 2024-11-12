@@ -197,9 +197,7 @@ there's a risk of recursive loops—this happens when the hook calls the origina
 which in turn triggers the hook again, causing infinite recursion. To avoid this, two methods are often employed:
 - Detecting recursion by examining the function return address.
 - Skipping the ftrace instrumentation by jumping over the profiling call (which is what MCOUNT_INSN_SIZE refers to).
+
 ## FENTRY 1
 mcount (or fentry on newer architectures) is a function that is inserted at the start of each function when kernel 
 tracing is enabled. It provides a hook for tracing function calls, but this can interfere with function hooking.
-
-
-

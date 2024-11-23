@@ -5,6 +5,7 @@
 
 VFILE=Vagrantfile
 VAGRANT_PLUGINS=("")
+DEFAULT_BOX=ubuntu/bionic64
 
 source .irmrc
 
@@ -12,10 +13,10 @@ source .irmrc
 if [ -e "$VFILE" ]; then
 	echo "Vagrantfile already exists"
 else
-    read -p "No '$VFILE'. Create it with vagrant init <image> or type 'y' to create generic/ubuntu2004 (y/n): " choice
+    read -p "No '$VFILE'. Create it with vagrant init <image> or type 'y' for $DEFAULT_BOX (y/n): " choice
     case "$choice" in 
       y|Y ) 
-		vagrant init generic/ubuntu2004
+		vagrant init $DEFAULT_BOX
         ;;
       * ) 
 		  exit

@@ -6,6 +6,8 @@ case $- in
       *) return;;
 esac
 
+source $HOME/.cargo/env
+
 # Enable color support for `ls` and add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
@@ -48,3 +50,4 @@ export LS_COLORS="di=34:fi=0:ln=36:pi=33:so=35:bd=33;1:cd=33;1:or=31;1:ex=32;1"
 if [ -f /etc/bashrc ]; then
     . /etc/bashrc
 fi
+

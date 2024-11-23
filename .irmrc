@@ -1,13 +1,19 @@
 # source this before running any scripts!
 
-vagrant(){
-  docker run -it --rm \
-    -e LIBVIRT_DEFAULT_URI \
-    -v /var/run/libvirt/:/var/run/libvirt/ \
-    -v ~/.vagrant.d:/.vagrant.d \
-    -v $(realpath "${PWD}"):${PWD} \
-    -w "${PWD}" \
-    --network host \
-    vagrantlibvirt/vagrant-libvirt:latest \
-      vagrant $@
-}
+DEFAULT_PROVIDER=virtualbox
+
+if [ "$DEFAULT_PROVIDER" == "libvirt" ]; then
+	echo "using libvirt requires docker for compatiblity with ruby"
+	vagrant(){
+	  docker run -it --rm \
+		-e LIBVIRT_DEFAULT_URI \
+		-v /var/run/libvirt/:/var/run/libvirt/ \
+		-v ~/.vagrant.d:/.vagrant.d \
+		-v $(realpath "${PWD}"):${PWD} \
+		-w "${PWD}" \
+		--network host \
+		vagrantlibvirt/vagrant-libvirt:latest \
+		  vagrant $@
+	}
+fi
+

@@ -1,3 +1,8 @@
 .vagrant/
 .secrets/
 *.log
+
+
+# Added by cargo
+
+/target

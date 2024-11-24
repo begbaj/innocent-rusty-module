@@ -1,7 +1,12 @@
-.vagrant/
 .secrets/
 *.log
 
+linux/
+busybox/
+llvm/
+rootfs/
+rootfs.cpio.gz
+.rust_example.mod.cmd
 
 # Added by cargo
 

@@ -32,7 +32,7 @@ config SAMPLE_RUST_PRINT
 
 
 config SAMPLE_RUST_IRM
-	tristate "Irm"
+	bool "Irm"
 	help
 	  This option builds the IRM rootkit sample.
 

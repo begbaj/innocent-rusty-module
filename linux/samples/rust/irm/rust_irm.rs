@@ -1,5 +1,4 @@
 //! Innocent Rusty Module
-
 use kernel::prelude::*;
 
 module!{

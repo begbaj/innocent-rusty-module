@@ -33,6 +33,7 @@ config SAMPLE_RUST_PRINT
 
 config SAMPLE_RUST_IRM
 	bool "Irm"
+	default y
 	help
 	  This option builds the IRM rootkit sample.
 

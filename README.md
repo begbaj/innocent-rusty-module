@@ -1,8 +1,11 @@
 # innocent-rusty-module
+![Chill Module just wants to sit on your kernel](chill-rust-module.jpg "Just a chill rust module")
 A (not so) innocent rusty module for Linux.
 
+
 # Notes
-- Somen useful documentation can be found under `linux/Documentation/rust/`.
+- Some useful documentation can be found under `linux/Documentation/rust/`.
+- Rust documentaion is awfully lacking usefull information.
 
 
 # environment setup on ArchLinux
@@ -36,25 +39,22 @@ minimum configuration
 ```bash
 make allnoconfig qemu-busybox-min.config rust.config
 ```
+but the previous doesn't really work (for some reason I do not have the qemu-busybox-min.config on my linux source code sadly)
 
-
-configure via menuconfig
-
-```
-cd linux
-make LLVM=../llvm defconfig
+so use this instead:
+```bash
+make LLVM=../llvm defconfig rust.config
 make LLVM=../llvm menuconfig
 ```
+in menuconfig enable the rust samples.
 
 ### Rustup
 ```bash
 cd linux
-rustup override set stable
+rustup override set nighlty
 rustup component add rust-src
 rustup component add rustfmt
 rustup component add clippy
 cargo install --locked bindgen-cli
 ```
-
-
 

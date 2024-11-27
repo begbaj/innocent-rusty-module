@@ -4,5 +4,6 @@ qemu-system-x86_64 \
 	-serial mon:stdio \
 	-kernel linux/arch/x86_64/boot/bzImage \
 	-initrd rootfs.cpio.gz \
+	-accel kvm \
 	-append "root=/dev/mem" \
 

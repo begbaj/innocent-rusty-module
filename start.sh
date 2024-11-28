@@ -1,3 +1,7 @@
+cd linux/
+make LLVM=../llvm -j$(nproc)
+cd ..
+bash packrootfs.sh
 qemu-system-x86_64 \
 	-M pc \
 	-m 512M \

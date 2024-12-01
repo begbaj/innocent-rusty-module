@@ -1,1 +1,3 @@
-make KDIR=../../linux LLVM=../../llvm
+source env
+
+make KDIR=$KDIR LLVM=$LLVMDIR $1

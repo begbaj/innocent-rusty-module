@@ -2,7 +2,7 @@
 #![allow(unused)]
 
 use core::format_args;
-use kernel::bindings::{ftrace_ops, pt_regs};
+use kernel::bindings::{ftrace_ops, pt_regs, __symbol_get_gpl, __symbol_get};
 use kernel::error::Result;
 use kernel::prelude::*;
 
@@ -27,7 +27,7 @@ macro_rules! hook {
 }
 
 struct Hook {
-    name: &'static str,
+    name: &'static core::ffi::c_char,
     function: fn(),
     original: fn(),
 
@@ -39,6 +39,9 @@ struct IRM;
 
 // eseguire un println ogni qual volta viene chiamato un mkdir
 
+type OrigT = unsafe extern "C" fn(regs: *const pt_regs) -> core::ffi::c_long;
+static mut ORIG_MKDIR: Option<OrigT> = None;
+
 impl IRM {
     fn ftrace_thunk() {
         todo!();
@@ -46,19 +49,37 @@ impl IRM {
     fn resolve_hook_address() {
         todo!();
     }
-    fn install_hook(hook: &mut Hook) {
-/** sadly this doesn't work since kallsyms_lookup_name is not anymore exported on
- * more recent versions of linux (5.7 and above)
- *      unsafe {
- *          hook.address = Some(kallsyms_lookup_name(
- *              CStr::from_bytes_with_nul(hook.name.as_bytes())
- *                  .unwrap()
- *                  .as_char_ptr(),
- *          ));
- *      }
- *      pr_debug!("address for {}: {}", hook.address.unwrap(), hook.name);
-**/
-        todo!()
+
+    fn get_addr_ptr(sysc: &[u8]) -> Option<OrigT> {
+        let mut symb = CStr::from_bytes_with_nul(sysc).unwrap();
+        let mut orig: Option<OrigT> = None;
+        unsafe {
+            orig = Some(core::mem::transmute(symb.as_char_ptr()));
+        }
+        orig
+    }
+
+    fn install_hook() {
+        //let mut symbols = KVec::new();
+        // symbols.push(CStr::from_bytes_with_nul(b"sys_mkdir\0").unwrap(), GFP_KERNEL);
+        // symbols.push(CStr::from_bytes_with_nul(b"sys_read\0").unwrap(), GFP_KERNEL);
+        // symbols.push(CStr::from_bytes_with_nul(b"sys_open\0").unwrap(), GFP_KERNEL);
+        // symbols.push(CStr::from_bytes_with_nul(b"__x64_sys_mkdir\0").unwrap(), GFP_KERNEL);
+        // symbols.push(CStr::from_bytes_with_nul(b"__x64_sys_read\0").unwrap(), GFP_KERNEL);
+        // let mut symb = CStr::from_bytes_with_nul(b"__x64_sys_mkdir\0").unwrap();
+        // let mut orig: Option<OrigT> = None;
+        // unsafe {
+        //     orig = Some(core::mem::transmute(symb.as_char_ptr()));
+        // }
+
+        let orig_mkdir = IRM::get_addr_ptr(b"__x64_sys_mkdir\0");
+        let orig_read  = IRM::get_addr_ptr(b"__x64_sys_read\0");
+        let orig_open  = IRM::get_addr_ptr(b"__x64_sys_read\0");
+
+        pr_info!("address {:p}", orig_mkdir.unwrap() as *const core::ffi::c_void);
+        pr_info!("address {:p}", orig_read.unwrap() as *const core::ffi::c_void);
+        pr_info!("address {:p}", orig_open.unwrap() as *const core::ffi::c_void);
+
     }
     fn uninstall_hook() {
         todo!();
@@ -68,8 +89,7 @@ impl IRM {
 impl kernel::Module for IRM {
     fn init(_module: &'static ThisModule) -> Result<Self> {
         pr_info!("IRM activated\n");
-        // let mut hk = hook!("sys_read", || {}, || {});
-        // IRM::install_hook(&mut hk);
+        IRM::install_hook();
         Ok(IRM)
     }
 }

@@ -2,6 +2,10 @@
 ![Chill Module just wants to sit on your kernel](chill-rust-module.jpg "Just a chill rust module")
 A (not so) innocent rusty module for Linux.
 
+# Resources
+[Step by step personal notes](https://app.affine.pro/workspace/19ab237e-8c00-46b3-9c4f-0d4b0205db36/feMuxeLUV9CSbIaPjOMYd?mode=page)
+[Understanding how a rootkit works](https://app.affine.pro/workspace/19ab237e-8c00-46b3-9c4f-0d4b0205db36/pn-GbwR9OpXvxIlEuBYwD?mode=page)
+[State of Art](https://app.affine.pro/workspace/19ab237e-8c00-46b3-9c4f-0d4b0205db36/BHp8DoN8sAjhweM8_BGye?mode=page)
 
 # Notes
 - Some useful documentation can be found under `linux/Documentation/rust/`.

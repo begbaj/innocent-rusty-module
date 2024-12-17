@@ -1828,7 +1828,7 @@ config KALLSYMS
 config KALLSYMS_SELFTEST
 	bool "Test the basic functions and performance of kallsyms"
 	depends on KALLSYMS
-	default n
+	default y
 	help
 	  Test the basic functions and performance of some interfaces, such as
 	  kallsyms_lookup_name. It also calculates the compression rate of the

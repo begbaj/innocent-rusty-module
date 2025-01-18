@@ -33,8 +33,8 @@ macro_rules! hook {
 struct Hook<'a> {
     name: &'a str,
     nr: u32,
-    hook: &'a SyscallT, 
-    ptr: *const (), 
+    hook: &'a SyscallT,
+    ptr: *const (),
     original: &'a Syscall,
 }
 
@@ -50,7 +50,8 @@ unsafe extern "C" fn hook_mkdir(regs: *const pt_regs) -> c_long {
     unsafe {
         let pathn = (*regs).di as *const i8;
         let mut dir_name = 0 as core::ffi::c_char;
-        let res = kernel::bindings::strncpy_from_user(&mut dir_name, pathn, 255 as core::ffi::c_long);
+        let res =
+            kernel::bindings::strncpy_from_user(&mut dir_name, pathn, 255 as core::ffi::c_long);
         pr_info!("chilling: {}", res);
     }
     0
@@ -61,8 +62,10 @@ impl kernel::Module for IRM {
     fn init(_module: &'static ThisModule) -> Result<Self> {
         pr_info!("hey bud, wassup");
 
-        let __sys_call_table: Syscall = get_addr_ptr(b"sys_call_table\0").expect("invalid symbol name");
-        let __mkdir_ptr_orig: Syscall = get_addr_ptr(b"__x64_sys_mkdir\0").expect("invalid symbol name");
+        let __sys_call_table: Syscall =
+            get_addr_ptr(b"sys_call_table\0").expect("invalid symbol name");
+        let __mkdir_ptr_orig: Syscall =
+            get_addr_ptr(b"__x64_sys_mkdir\0").expect("invalid symbol name");
         let __mkdir_ptr_hook: Hook<'_>;
         unsafe {
             __mkdir_ptr_hook = Hook {
@@ -84,7 +87,6 @@ impl kernel::Module for IRM {
     }
 }
 
-
 fn get_addr_ptr(symb: &[u8]) -> Option<Syscall> {
     let cstr = CStr::from_bytes_with_nul(symb).ok()?;
     unsafe {
@@ -101,7 +103,7 @@ fn get_addr_ptr(symb: &[u8]) -> Option<Syscall> {
         if symbaddr == 0 {
             None
         } else {
-            Some(Syscall{
+            Some(Syscall {
                 fun: core::mem::transmute(symbaddr),
                 ptr: core::mem::transmute(symbaddr),
             })
@@ -126,15 +128,15 @@ fn cr0_read() -> u64 {
 fn unshield_memory() {
     let mut cr0 = cr0_read();
     // pr_info!("CR0 value before {:b}", cr0);
-    cr0 &= !(1 << 16);      // Clear the write-protection bit
+    cr0 &= !(1 << 16); // Clear the write-protection bit
     unsafe {
         core::arch::asm!(
             "mov cr0, {}",
-            in(reg) cr0, 
+            in(reg) cr0,
         );
     }
     cr0 = cr0_read(); // call cr0_read again
-    // pr_info!("CR0 value after {:b}", cr0);
+                      // pr_info!("CR0 value after {:b}", cr0);
 }
 
 fn shield_memory() {
@@ -144,7 +146,7 @@ fn shield_memory() {
     unsafe {
         core::arch::asm!(
             "mov cr0, {}",
-            in(reg) cr0, 
+            in(reg) cr0,
         );
     }
     cr0 = cr0_read();
@@ -187,7 +189,6 @@ fn install_hook(systab: &Syscall, hook: &Hook<'_>) {
 
         // IRM::write_to_nr(&mut systab, __NR_mkdir.try_into().unwrap(), hook_mkdir as *mut core::ffi::c_void);
 
-
         //let pointer = systab.add(__NR_mkdir as usize).read_volatile() as *mut core::ffi::c_void;
         // pr_info!(
         //     "\t{}|\t{:p}\t\t|\t\t{:p}\t\t|",
@@ -203,7 +204,7 @@ fn install_hook(systab: &Syscall, hook: &Hook<'_>) {
         pr_info!("{:p} - {:#x}", ptr, ptr.read_volatile());
         pr_info!("{:p}", hptr);
         // sysptr.add(hook.nr as usize).write_volatile(core::mem::transmute(hook.ptr));
-         
+
         core::arch::asm!(
             "mov rax, {0}",
             "mov rbx, {1}",

@@ -1,1 +1,3 @@
+KBUILD_CFLAGS += -Wno-missing-prototypes -Wno-unused-function -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-value -Wno-unused-label -Wno-unused-parameter
+
 obj-m += irm-c.o

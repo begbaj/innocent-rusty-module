@@ -1,3 +1,4 @@
-KBUILD_CFLAGS += -Wno-missing-prototypes -Wno-unused-function -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-value -Wno-unused-label -Wno-unused-parameter
+# KBUILD_CFLAGS += -Wno-missing-prototypes -Wno-unused-function -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-value -Wno-unused-label -Wno-unused-parameter -Wno-unknown-pragmas -Wno-unknown-warning-option
+KBUILD_CFLAGS +=-Wno-everything -fno-optimize-sibling-calls
 
 obj-m += irm-c.o

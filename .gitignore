@@ -1,8 +1,8 @@
 .secrets/
 *.log
 
-busybox/
-llvm/
+linux-6.10/
+
 rootfs.cpio.gz
 .rust_example.mod.cmd
 

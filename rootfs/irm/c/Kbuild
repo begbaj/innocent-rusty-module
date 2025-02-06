@@ -2,3 +2,4 @@
 KBUILD_CFLAGS +=-Wno-everything -fno-optimize-sibling-calls
 
 obj-m += irm-c.o
+obj-m += irm-hw.o

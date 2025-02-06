@@ -1,1 +1,16 @@
+#!/bin/sh
 mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+mount -t devtmpfs devtmpfs /dev
+chmod 755 -R /bin
+chmod 755 -R /sbin
+chmod 755 -R /usr
+chmod 755 -R /etc
+chmod 700 -R /supersecret
+
+chmod 600 /etc/shadow
+chmod 644 /etc/passwd
+chmod 644 /etc/group
+chmod 700 /root
+chown -R 0:0 /root
+chown -R 0:0 /supersecret

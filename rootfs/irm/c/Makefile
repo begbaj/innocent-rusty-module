@@ -2,6 +2,7 @@
 KDIR ?= ../../../linux-rust-next
 LLVM ?= ../../../llvm
 kmod_name = irm-c
+CFLAGS_MODULE += -fno-cfi
 
 default:
 	$(MAKE) -C $(KDIR) M=$$PWD modules 

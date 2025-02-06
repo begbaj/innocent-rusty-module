@@ -11,8 +11,8 @@ while true; do
   if [ "$CURRENT_MODIFIED" -ne "$LAST_MODIFIED" ]; then
     clear
     echo "kernel watch compile watch"
-    cd linux-$LINUX_VERSION/
-    make LLVM=../llvm -j$(nproc)
+    cd linux-$LINUX_VERSION/ || (echo "directory unreachable" && exit)
+    make LLVM=../llvm -j"$(nproc)"
     cd ..
     LAST_MODIFIED=$CURRENT_MODIFIED
   fi

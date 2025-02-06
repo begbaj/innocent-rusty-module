@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Files to watch
-FILES=("irm.rs" "cr0_monitor.rs")
+FILES=("irm.rs" "cr0_monitor.rs" "features/hide.rs")
 
 # Initialize last modified times
 declare -A LAST_MODIFIED

